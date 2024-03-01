@@ -1,14 +1,14 @@
+export function renderCards(images, gallery) {
 
-import iziToast from 'izitoast';
-import * as basicLightbox from 'basiclightbox'
-
-export function renderCards(images, galleryElement) {
-  const gallery = document.querySelector(galleryElement);
-  gallery.innerHTML = '';
-
-  images.forEach((image) => {
+  images.forEach((image, index) => {
     const cardMarkup = createCardMarkup(image);
     gallery.insertAdjacentHTML('beforeend', cardMarkup);
+
+    // Scroll to the last appended image
+    if (index === images.length - 1) {
+      const lastImage = gallery.lastElementChild;
+      lastImage.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
+    }
   });
 }
 
