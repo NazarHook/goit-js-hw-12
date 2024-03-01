@@ -45,7 +45,7 @@ form.addEventListener('submit', async (event) => {
     toggleLoadMoreButton(totalHits > currentPage * 15);
     firstLoad = false;
   } catch (error) {
-    console.error(error);
+    
   } finally {
     loader.style.display = 'none';
     form.reset();
@@ -69,7 +69,7 @@ loadMoreButton.addEventListener('click', async () => {
     toggleLoadMoreButton(totalHits > currentPage * 15);
     firstLoad = false;
   } catch (error) {
-    console.error(error);
+    
   } finally {
     loader.style.display = 'none';
   }
