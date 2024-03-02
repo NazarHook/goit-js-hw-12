@@ -1,5 +1,3 @@
-// pixabay-api.js
-
 const KEY = '42555164-0de9ae952fe9eb05e418ffbde';
 
 export async function fetchImages(query, page = 1, perPage = 15) {
