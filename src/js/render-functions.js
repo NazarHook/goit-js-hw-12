@@ -1,10 +1,7 @@
 export function renderCards(images, gallery) {
-
   images.forEach((image, index) => {
     const cardMarkup = createCardMarkup(image);
     gallery.insertAdjacentHTML('beforeend', cardMarkup);
-
-    // Scroll to the last appended image
     if (index === images.length - 1) {
       const lastImage = gallery.lastElementChild;
       lastImage.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });

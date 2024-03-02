@@ -18,6 +18,7 @@ let firstLoad = true;
 
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
+  gallery.innerHTML = '';
   const query = input.value.trim();
   loader.style.display = 'inline-block';
 
@@ -36,20 +37,16 @@ form.addEventListener('submit', async (event) => {
     totalHits = result.totalHits;
 
     renderCards(result.images, gallery, firstLoad);
-    const lightbox = new SimpleLightbox('.gallery a', {
-      captionsData: 'alt',
-      captionDelay: 250,
-    });
-    lightbox.refresh();
-
     toggleLoadMoreButton(totalHits > currentPage * 15);
     firstLoad = false;
   } catch (error) {
-    
+    console.error(error);
   } finally {
     loader.style.display = 'none';
     form.reset();
   }
+  loadMoreButton.disabled = false
+  loadMoreButton.style.cursor = 'pointer'
 });
 
 loadMoreButton.addEventListener('click', async () => {
@@ -65,11 +62,10 @@ loadMoreButton.addEventListener('click', async () => {
       captionDelay: 250,
     });
     lightbox.refresh();
-
     toggleLoadMoreButton(totalHits > currentPage * 15);
     firstLoad = false;
   } catch (error) {
-    
+    console.error(error);
   } finally {
     loader.style.display = 'none';
   }
@@ -83,24 +79,20 @@ function toggleLoadMoreButton(show) {
 async function fetchImages(query, page = 1) {
   const KEY = '42555164-0de9ae952fe9eb05e418ffbde';
   const perPage = 15;
-
   const url = `https://pixabay.com/api/?key=${KEY}&q=${query}&image_type=photo&orientation=horizontal&safesearch=true&page=${page}&per_page=${perPage}`;
 
   try {
     const response = await axios.get(url);
 
     if (response.data.hits.length === 0) {
-      // Notify user when no images found
       iziToast.info({
         message: 'No images found',
         position: 'topRight',
       });
-      
-      // Clear the gallery
       gallery.innerHTML = '';
-      totalPages = 0; // Reset totalPages
+      totalPages = 0; 
     } else {
-      totalPages = Math.ceil(response.data.totalHits / perPage); // Set totalPages
+      totalPages = Math.ceil(response.data.totalHits / perPage); 
     }
 
     return {
@@ -122,3 +114,7 @@ async function fetchImages(query, page = 1) {
     };
   }
 }
+window.addEventListener('load', () => {
+  loadMoreButton.disabled = true
+  loadMoreButton.style.cursor = 'not-allowed'
+})
