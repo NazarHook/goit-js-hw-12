@@ -14,14 +14,20 @@ let currentPage = 1;
 let totalHits = 0;
 let totalPages = 0
 let currentQuery = '';
-let firstLoad = true;
+export let firstLoad = true;
+function initializeSimpleLightbox() {
+  const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
 
+  lightbox.refresh();
+}
 form.addEventListener('submit', async (event) => {
   event.preventDefault();
   gallery.innerHTML = '';
   const query = input.value.trim();
   loader.style.display = 'inline-block';
-
   if (!query || query.length < 3) {
     iziToast.error({
       message: 'Search query must be at least 3 characters long',
@@ -35,8 +41,8 @@ form.addEventListener('submit', async (event) => {
     const result = await fetchImages(query);
     currentQuery = query;
     totalHits = result.totalHits;
-
     renderCards(result.images, gallery, firstLoad);
+    initializeSimpleLightbox()
     toggleLoadMoreButton(totalHits > currentPage * 15);
     firstLoad = false;
   } catch (error) {
@@ -57,11 +63,9 @@ loadMoreButton.addEventListener('click', async () => {
     const result = await fetchImages(currentQuery, currentPage);
 
     renderCards(result.images, gallery, firstLoad);
-    const lightbox = new SimpleLightbox('.gallery a', {
-      captionsData: 'alt',
-      captionDelay: 250,
-    });
-    lightbox.refresh();
+    const hasMorePages = currentPage < totalPages;
+    toggleLoadMoreButton(hasMorePages);
+    initializeSimpleLightbox();
     toggleLoadMoreButton(totalHits > currentPage * 15);
     firstLoad = false;
   } catch (error) {
@@ -69,6 +73,7 @@ loadMoreButton.addEventListener('click', async () => {
   } finally {
     loader.style.display = 'none';
   }
+  
 });
 
 function toggleLoadMoreButton(show) {
@@ -115,6 +120,5 @@ async function fetchImages(query, page = 1) {
   }
 }
 window.addEventListener('load', () => {
-  loadMoreButton.disabled = true
-  loadMoreButton.style.cursor = 'not-allowed'
+  loadMoreButton.style.display = 'none';
 })

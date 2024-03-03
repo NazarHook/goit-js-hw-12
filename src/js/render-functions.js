@@ -1,12 +1,12 @@
 export function renderCards(images, gallery) {
-  console.log(images);
+ 
   images.forEach((image, index) => {
     const cardMarkup = createCardMarkup(image);
     gallery.insertAdjacentHTML('beforeend', cardMarkup);
     if (index === images.length - 1) {
       const lastImage = gallery.lastElementChild;
       lastImage.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' });
-    }
+    } 
   });
 }
 
